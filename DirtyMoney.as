@@ -11,8 +11,10 @@
 		public var dataLoader:URLLoader;	
 		
 		public function DirtyMoney() {
-			// Go to main view
-			gotoAndStop("Main");
+			stop();
+			// Set up preloader
+			preloader.stop();
+			loaderInfo.addEventListener(ProgressEvent.PROGRESS, doLoadingProgress);
 			
 			// Load CSV file containing candidate IDs
 			dataRequest = new URLRequest("crp_ids.csv");
@@ -21,6 +23,14 @@
 			// Call storeCSVData() when the file is fully loaded
 			dataLoader.addEventListener(Event.COMPLETE, storeCSVData);
 			dataLoader.load(dataRequest);
+		}
+		
+		public function doLoadingProgress(e:ProgressEvent):void {
+			var percentage:Number = Math.floor((e.bytesLoaded/e.bytesTotal) * 100);
+			preloader.gotoAndStop(percentage);
+			if (percentage == 100) {
+				gotoAndStop("Main");
+			}
 		}
 		
 		public function storeCSVData(e:Event):void {
