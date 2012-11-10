@@ -13,6 +13,8 @@
 		public var dataLoader:URLLoader;
 		public var csvData:Array;
 		
+		public var politicianName:String;
+		
 		public function DirtyMoney() {
 			stop();
 			// Set up preloader
@@ -37,20 +39,20 @@
 				gotoAndStop("Main");
 				// Set up searching
 				
-				tf_search.text_input.addEventListener(KeyboardEvent.KEY_UP, doSearchFieldChange);
+				tfSearch.textInput.addEventListener(KeyboardEvent.KEY_UP, doSearchFieldChange);
 			}
 		}
 		
 		public function doSearchFieldChange(e:KeyboardEvent):void {
 			for (var line:int = 0; line < csvData.length; line++) {
 				// concatinate name, remove double quotes, and strip leading and trailing whitespace
-				var politician_name:String = (csvData[line][2] + " " + csvData[line][1]).replace(/"/gi, "").replace(/^\s+|\s+$/g, "");
-				if (politician_name.toLowerCase() == e.target.text.toLowerCase()) {
-					text_status.text = "Found politician!";
+				politicianName = (csvData[line][2] + " " + csvData[line][1]).replace(/"/gi, "").replace(/^\s+|\s+$/g, "");
+				if (politicianName.toLowerCase() == e.target.text.toLowerCase()) {
+					textStatus.text = "Found politician!";
 					break;
 				} else {
 					// Display politician name capitalized properly with regex
-					text_status.text = "Politician "
+					textStatus.text = "Politician "
 						+ e.target.text.replace(/\b[a-z]/g, function($0){return $0.toUpperCase();})
 						+ " not found.";
 				}
