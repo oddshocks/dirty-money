@@ -19,7 +19,6 @@
 		public var xmlRequest:URLRequest;
 		public var xmlLoader:URLLoader;
 		public var xmlData:XML;
-		public var xmlResponse:XMLList;
 		public var dataInfo:XMLList;
 		public var industries:XMLList;
 		
@@ -56,13 +55,6 @@
 				
 				// Do a default candidate search, to show an example
 				candidateSearch("N00007360");
-				
-				// create IndustryWidget for testing
-				var widget = new IndustryWidget("Bosses", 5, 10, 15);
-				widget.x = 200;
-				widget.y = 400;
-				industryWidgets.push(widget);
-				addChild(widget);
 			}
 		}
 		
@@ -127,28 +119,8 @@
 			xmlData = new XML(xmlLoader.data);
 			
 			// get response
-			xmlResponse = xmlData.elements("industries");
-			for each (var j:XML in xmlResponse) {
-				trace("cand name: " + j);
-			}
-			
-			/*
-			for each (var r:XML in xmlResponse) {
-				dataInfo = r.elements("industries");
-				trace("cand name: " + dataInfo.@cand_name);
-				for each (var i:XML in dataInfo) {
-					industries = i.elements("industry");
-				}
-			}
-			*/
-			
-			/*
 			dataInfo = xmlData.elements("industries");
-			for each (var i:XML in dataInfo) {
-				industries = i.elements("industry");
-				trace(industries);
-			}
-			*/
+			industries = dataInfo.elements("industry");
 			
 			// display the info
 			displayCandidateInfo();
@@ -160,17 +132,26 @@
 			 * can at all. The docs don't seem to expose a method of XMLList which
 			 * returns an XML object.
 			 */
-			trace("displaying");
 			for each (var d:XML in dataInfo) {
-				trace(d);
 				textName.text = d.@cand_name;
 			
 				// set footer info
 				textFooter.text = d.@cycle + " cycle data for candidate ID "
 									+ d.@cid
-									+ " pulled from: " + d.@origin + ".\n"
-									+ "Data last updated " + d.@last_updated
+									+ " pulled from: " + d.@origin
+									+ "\nData last updated " + d.@last_updated
 									+ ". Source: " + d.@source;
+			}
+			
+			for each (var i:XML in industries) {
+				trace("i");
+				// create IndustryWidget in random location
+				var widget = new IndustryWidget(i.@industry_name,
+												i.@indivs, i.@pacs, i.@total);
+				widget.x = Math.random() * 300 + 200;
+				widget.y = Math.random() * 300 + 200;
+				industryWidgets.push(widget);
+				addChild(widget);
 			}
 		}
 	}
