@@ -12,6 +12,10 @@
 		public const API_BASE_URL:String
 			= "http://www.opensecrets.org/api/?method=candIndustry&cid=";
 		public const DATE:Date = new Date();
+		public const DRAG_BOUND_X_MIN = 20;
+		public const DRAG_BOUND_X_MAX = 700;
+		public const DRAG_BOUND_Y_MIN = 250;
+		public const DRAG_BOUND_Y_MAX = 400;
 		
 		public var csvRequest:URLRequest;
 		public var csvLoader:URLLoader;
@@ -25,6 +29,9 @@
 		public var candidateName:String;
 		
 		public var industryWidgets:Array;
+		
+		public var topContribution:Number;
+		public var zoomLevel:Number;
 		
 		public function DirtyMoney() {
 			stop();
@@ -53,9 +60,18 @@
 				// Set up searching
 				textInput.addEventListener(KeyboardEvent.KEY_UP, doSearchFieldChange);
 				
+				// Set up zooming
+				zoomLevel = sliderZoom.value;
+				sliderZoom.addEventListener(Event.CHANGE, changeZoom);
+				
 				// Do a default candidate search, to show an example
 				candidateSearch("N00007360");
 			}
+		}
+		
+		public function changeZoom(e:Event):void {
+			zoomLevel = e.target.value;
+			renderZoom();
 		}
 		
 		public function doSearchFieldChange(e:KeyboardEvent):void {
@@ -132,6 +148,8 @@
 			 * can at all. The docs don't seem to expose a method of XMLList which
 			 * returns an XML object.
 			 */
+			
+			// get metadata
 			for each (var d:XML in dataInfo) {
 				textName.text = d.@cand_name;
 			
@@ -143,15 +161,35 @@
 									+ ". Source: " + d.@source;
 			}
 			
+			// get industry data
 			for each (var i:XML in industries) {
-				trace("i");
 				// create IndustryWidget in random location
 				var widget = new IndustryWidget(i.@industry_name,
 												i.@indivs, i.@pacs, i.@total);
-				widget.x = Math.random() * 300 + 200;
-				widget.y = Math.random() * 300 + 200;
+				widget.x = Math.random() * (DRAG_BOUND_X_MAX - DRAG_BOUND_X_MIN)
+							+ DRAG_BOUND_X_MIN;
+				widget.y = Math.random() * (DRAG_BOUND_Y_MAX - DRAG_BOUND_Y_MIN)
+							+ DRAG_BOUND_Y_MIN;
 				industryWidgets.push(widget);
 				addChild(widget);
+			}
+			
+			// get largest total contribution
+			topContribution = 0;
+			for each (var w:IndustryWidget in industryWidgets) {
+				if (w.total > topContribution) {
+					topContribution = w.total;
+				}
+			}
+			
+			renderZoom();
+		}
+		
+		public function renderZoom():void {
+			// scale IndustryWidgets based on zoom level
+			for each (var w:IndustryWidget in industryWidgets) {
+				w.scaleX = (w.total / topContribution) * (zoomLevel / 100);
+				w.scaleY = (w.total / topContribution) * (zoomLevel / 100);
 			}
 		}
 	}
