@@ -19,6 +19,7 @@
 		public var xmlRequest:URLRequest;
 		public var xmlLoader:URLLoader;
 		public var xmlData:XML;
+		public var xmlResponse:XMLList;
 		public var dataInfo:XMLList;
 		public var industries:XMLList;
 		
@@ -79,6 +80,10 @@
 											+ cid + "&cycle="
 											+ DATE.fullYear + "&apikey="
 											+ API_KEY);
+			trace(API_BASE_URL
+											+ cid + "&cycle="
+											+ DATE.fullYear + "&apikey="
+											+ API_KEY);
 			xmlLoader = new URLLoader();
 			xmlLoader.load(xmlRequest);
 			
@@ -105,18 +110,54 @@
 		
 		public function storeXMLData(e:Event):void {
 			xmlData = new XML(xmlLoader.data);
+			trace(xmlData);
 			
-			// get metadata
+			// get response
+			xmlResponse = xmlData.elements("response");
+			for each (var i:XML in xmlResponse) {
+				trace("cand name: " + i);
+			}
+			
+			/*
+			for each (var r:XML in xmlResponse) {
+				dataInfo = r.elements("industries");
+				trace("cand name: " + dataInfo.@cand_name);
+				for each (var i:XML in dataInfo) {
+					industries = i.elements("industry");
+				}
+			}
+			*/
+			
+			/*
 			dataInfo = xmlData.elements("industries");
-			// get data 
-			industries = xmlData.elements("industry");
+			for each (var i:XML in dataInfo) {
+				industries = i.elements("industry");
+				trace(industries);
+			}
+			*/
 			
 			// display the info
 			displayCandidateInfo();
 		}
 		
 		public function displayCandidateInfo():void {
-			textName.text = dataInfo.@cand_name;
+			/** There will only be one XML object, but a for loop works to get it
+			 * I'm not sure how to get a specific element from an XMLList, if you
+			 * can at all. The docs don't seem to expose a method of XMLList which
+			 * returns an XML object.
+			 */
+			trace("displaying");
+			for each (var d:XML in dataInfo) {
+				trace(d);
+				textName.text = d.@cand_name;
+			
+				// set footer info
+				textFooter.text = d.@cycle + " cycle data for candidate ID "
+									+ d.@cid
+									+ " pulled from: " + d.@origin + ".\n"
+									+ "Data last updated " + d.@last_updated
+									+ ". Source: " + d.@source;
+			}
 		}
 	}
 }
