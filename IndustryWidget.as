@@ -21,7 +21,7 @@
 			pacs = _pacs;
 			total = _total;
 			
-			percentPacs = (pacs / total) * 100;
+			percentPacs = Math.round((pacs / total) * 100);
 			
 			// Display info
 			textIndustry.text = industryName;
@@ -29,14 +29,17 @@
 			// Set up dragging
 			addEventListener(MouseEvent.MOUSE_DOWN, startDragging);
 			addEventListener(MouseEvent.MOUSE_UP, stopDragging);
+			
+			// Set up backing
+			backing.gotoAndStop(percentPacs);
 		}
 		
 		public function startDragging(e:MouseEvent):void {
-			e.target.startDrag();
+			startDrag();
 		}
 		
 		public function stopDragging(e:Event):void {
-			e.target.stopDrag();
+			stopDrag();
 			/*if (e.target.dropTarget.parent.name == "basket") {
 				parent.removeChild(this);
 			}*/

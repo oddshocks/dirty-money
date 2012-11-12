@@ -25,11 +25,16 @@
 		
 		public var candidateName:String;
 		
+		public var industryWidgets:Array;
+		
 		public function DirtyMoney() {
 			stop();
 			// Set up preloader
 			preloader.stop();
 			loaderInfo.addEventListener(ProgressEvent.PROGRESS, doLoadingProgress);
+			
+			// set up array to hold industry widgets
+			industryWidgets = new Array();
 			
 			// Load CSV file containing candidate IDs
 			csvRequest = new URLRequest("crp_ids.csv");
@@ -56,6 +61,7 @@
 				var widget = new IndustryWidget("Bosses", 5, 10, 15);
 				widget.x = 200;
 				widget.y = 400;
+				industryWidgets.push(widget);
 				addChild(widget);
 			}
 		}
@@ -82,6 +88,7 @@
 		
 		public function candidateSearch(cid:String):void {
 			// Load XML data based on candidate ID
+			/* Disable API requests while the API is being goofy
 			xmlRequest = new URLRequest(API_BASE_URL
 											+ cid + "&cycle="
 											+ DATE.fullYear + "&apikey="
@@ -90,6 +97,8 @@
 											+ cid + "&cycle="
 											+ DATE.fullYear + "&apikey="
 											+ API_KEY);
+			*/
+			xmlRequest = new URLRequest("docs/example_response.xml");
 			xmlLoader = new URLLoader();
 			xmlLoader.load(xmlRequest);
 			
@@ -116,13 +125,6 @@
 		
 		public function storeXMLData(e:Event):void {
 			xmlData = new XML(xmlLoader.data);
-			trace(xmlData);
-			
-			// get response
-			xmlResponse = xmlData.elements("response");
-			for each (var i:XML in xmlResponse) {
-				trace("cand name: " + i);
-			}
 			
 			// get response
 			xmlResponse = xmlData.elements("industries");
