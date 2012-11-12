@@ -51,6 +51,12 @@
 				
 				// Do a default candidate search, to show an example
 				candidateSearch("N00007360");
+				
+				// create IndustryWidget for testing
+				var widget = new IndustryWidget("Bosses", 5, 10, 15);
+				widget.x = 200;
+				widget.y = 400;
+				addChild(widget);
 			}
 		}
 		
@@ -116,6 +122,12 @@
 			xmlResponse = xmlData.elements("response");
 			for each (var i:XML in xmlResponse) {
 				trace("cand name: " + i);
+			}
+			
+			// get response
+			xmlResponse = xmlData.elements("industries");
+			for each (var j:XML in xmlResponse) {
+				trace("cand name: " + j);
 			}
 			
 			/*
