@@ -29,6 +29,7 @@
 		public var candidateName:String;
 		
 		public var industryWidgets:Array;
+		public var tooltips:Array;
 		
 		public var topContribution:Number;
 		public var zoomLevel:Number;
@@ -39,8 +40,9 @@
 			preloader.stop();
 			loaderInfo.addEventListener(ProgressEvent.PROGRESS, doLoadingProgress);
 			
-			// set up array to hold industry widgets
+			// set up arrays to hold dynamically generated objects
 			industryWidgets = new Array();
+			tooltips = new Array();
 			
 			// Load CSV file containing candidate IDs
 			csvRequest = new URLRequest("crp_ids.csv");
@@ -194,6 +196,7 @@
 				// set up tooltips
 				// did this here instead of in IndustryWidget for simplicity
 				widget.addEventListener(MouseEvent.ROLL_OVER, tooltipUp);
+				widget.addEventListener(MouseEvent.ROLL_OUT, tooltipDown);
 				// add to array and display list
 				industryWidgets.push(widget);
 				addChild(widget);
@@ -211,8 +214,28 @@
 		}
 		
 		public function tooltipUp(e:MouseEvent):void {
+			clearTooltips();
 			var tooltip:Tooltip = new Tooltip(e.target);
+			tooltips.push(tooltip);
 			addChild(tooltip);
+		}
+		
+		public function tooltipDown(e:MouseEvent):void {
+			if (tooltips.length > 0) {
+				for (var i:int = 0; i < tooltips.length; i++) {
+					tooltips[i].stayAlive = false;
+				}
+			}
+		}
+		
+		public function clearTooltips():void {
+			// gonna avoid for each loops, see clearIndustryWidgets()
+			if (tooltips.length > 0) {
+				for (var i:int = 0; i < tooltips.length; i++) {
+					tooltips[i].parent.removeChild(tooltips[i]);
+				}
+				tooltips = [];
+			}
 		}
 		
 		public function renderZoom():void {

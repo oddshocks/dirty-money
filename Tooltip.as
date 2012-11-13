@@ -9,7 +9,7 @@
 	public class Tooltip extends MovieClip {
 		
 		public var linkedWidget:Object;
-		public var stayAlive:Boolean;
+		public var stayAlive:Boolean = true;
 		
 		public function Tooltip(_linkedWidget:Object) {
 			
@@ -20,7 +20,7 @@
 			scaleY = 0.6;
 			
 			addEventListener(Event.ENTER_FRAME, doFrame);
-			linkedWidget.addEventListener(MouseEvent.ROLL_OUT, fadeAway);
+			//linkedWidget.addEventListener(MouseEvent.ROLL_OUT, fadeAway);
 		}
 		
 		public function doFrame(e:Event):void {
@@ -29,18 +29,19 @@
 			if (currentFrame == 24 && stayAlive) {
 				stop();
 				textTotal.text = "$" + linkedWidget.total;
-				//textPacs.text = linkedWidget.percentPacs + "%";
+				textPacs.text = linkedWidget.percentPacs + "%";
 			} else if (currentFrame == 24 && !stayAlive) {
 				play();
 			} else if (currentFrame == 48) {
 				removeEventListener(Event.ENTER_FRAME, doFrame);
-				parent.removeChild(this);
+				visible = false; // janky, but whatever. it has to happen
 			}
 		}
 		
-		public function fadeAway(e:MouseEvent):void {
-			stayAlive = false;
-			linkedWidget.removeEventListener(MouseEvent.ROLL_OUT, fadeAway);
-		}
+		//public function fadeAway(e:MouseEvent):void {
+			
+			//stayAlive = false;
+			//linkedWidget.removeEventListener(MouseEvent.ROLL_OUT, fadeAway);
+		//}
 	}
 }
