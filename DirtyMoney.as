@@ -67,9 +67,16 @@
 				zoomLevel = sliderZoom.value;
 				sliderZoom.addEventListener(Event.CHANGE, changeZoom);
 				
+				// set up nav
+				btnDoc.addEventListener(MouseEvent.MOUSE_UP, gotoDocs);
+				
 				// Do a default candidate search, to show an example
 				candidateSearch("N00007360");
 			}
+		}
+		
+		public function gotoDocs(e:MouseEvent):void {
+			
 		}
 		
 		public function clearSearchField(e:MouseEvent):void {
