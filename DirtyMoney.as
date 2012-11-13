@@ -76,7 +76,25 @@
 		}
 		
 		public function gotoDocs(e:MouseEvent):void {
-			
+			clearIndustryWidgets();
+			clearTooltips();
+			gotoAndStop("Documentation");
+			btnMain.addEventListener(MouseEvent.MOUSE_UP, gotoMain);
+		}
+		
+		public function gotoMain(e:MouseEvent):void {
+			gotoAndStop("Main");
+				
+				// Set up searching
+				textInput.addEventListener(KeyboardEvent.KEY_UP, doSearchFieldChange);
+				textInput.addEventListener(MouseEvent.MOUSE_UP, clearSearchField);
+				
+				// Set up zooming
+				zoomLevel = sliderZoom.value;
+				sliderZoom.addEventListener(Event.CHANGE, changeZoom);
+				
+				// set up nav
+				btnDoc.addEventListener(MouseEvent.MOUSE_UP, gotoDocs);
 		}
 		
 		public function clearSearchField(e:MouseEvent):void {
