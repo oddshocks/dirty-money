@@ -28,7 +28,7 @@
 			y = parent.mouseY - 100;
 			if (currentFrame == 24 && stayAlive) {
 				stop();
-				e.target.textTotal.text = "$" + linkedWidget.total;
+				textTotal.text = "$" + linkedWidget.total;
 				//textPacs.text = linkedWidget.percentPacs + "%";
 			} else if (currentFrame == 24 && !stayAlive) {
 				play();
