@@ -75,6 +75,7 @@
 		}
 		
 		public function doSearchFieldChange(e:KeyboardEvent):void {
+			clearIndustryWidgets();
 			if (textInput.text != "") {
 				for (var line:int = 0; line < csvData.length; line++) {
 					// concatinate name, remove double quotes, and strip leading and trailing whitespace
@@ -96,17 +97,10 @@
 		
 		public function candidateSearch(cid:String):void {
 			// Load XML data based on candidate ID
-			/* Disable API requests while the API is being goofy
 			xmlRequest = new URLRequest(API_BASE_URL
 											+ cid + "&cycle="
 											+ DATE.fullYear + "&apikey="
 											+ API_KEY);
-			trace(API_BASE_URL
-											+ cid + "&cycle="
-											+ DATE.fullYear + "&apikey="
-											+ API_KEY);
-			*/
-			xmlRequest = new URLRequest("docs/example_response.xml");
 			xmlLoader = new URLLoader();
 			xmlLoader.load(xmlRequest);
 			
@@ -170,6 +164,11 @@
 							+ DRAG_BOUND_X_MIN;
 				widget.y = Math.random() * (DRAG_BOUND_Y_MAX - DRAG_BOUND_Y_MIN)
 							+ DRAG_BOUND_Y_MIN;
+				// set up tooltips
+				// did this here instead of in IndustryWidget for simplicity
+				//widget.addEventListener(MouseEvent.ROLL_OVER, tooltipUp);
+				//widget.addEventListener(MouseEvent.ROLL_OUT, tooltipDown);
+				// add to array and display list
 				industryWidgets.push(widget);
 				addChild(widget);
 			}
@@ -185,11 +184,28 @@
 			renderZoom();
 		}
 		
+		public function tooltipUp(e:MouseEvent):void {
+			//var tooltip:Tooltip = new Tooltip(e.target.percentPacs);
+			//tooltip.x = 200;
+			//tooltip.y = 200;
+			//addChild(tooltip);
+		}
+		
+		public function tooltipDown(e:MouseEvent):void {
+			//pass
+		}
+		
 		public function renderZoom():void {
 			// scale IndustryWidgets based on zoom level
 			for each (var w:IndustryWidget in industryWidgets) {
 				w.scaleX = (w.total / topContribution) * (zoomLevel / 100);
 				w.scaleY = (w.total / topContribution) * (zoomLevel / 100);
+			}
+		}
+		
+		public function clearIndustryWidgets():void {
+			for each (var w:IndustryWidget in industryWidgets) {
+				w.parent.removeChild(industryWidgets.pop());
 			}
 		}
 	}
