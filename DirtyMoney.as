@@ -12,10 +12,10 @@
 		public const API_BASE_URL:String
 			= "http://www.opensecrets.org/api/?method=candIndustry&cid=";
 		public const DATE:Date = new Date();
-		public const DRAG_BOUND_X_MIN = 20;
-		public const DRAG_BOUND_X_MAX = 700;
-		public const DRAG_BOUND_Y_MIN = 250;
-		public const DRAG_BOUND_Y_MAX = 400;
+		public const DRAG_BOUND_X_MIN = 50;
+		public const DRAG_BOUND_X_MAX = 750;
+		public const DRAG_BOUND_Y_MIN = 300;
+		public const DRAG_BOUND_Y_MAX = 450;
 		
 		public var csvRequest:URLRequest;
 		public var csvLoader:URLLoader;
@@ -32,8 +32,6 @@
 		
 		public var topContribution:Number;
 		public var zoomLevel:Number;
-		
-		public var tooltip:Tooltip;
 		
 		public function DirtyMoney() {
 			stop();
@@ -196,7 +194,6 @@
 				// set up tooltips
 				// did this here instead of in IndustryWidget for simplicity
 				widget.addEventListener(MouseEvent.ROLL_OVER, tooltipUp);
-				//widget.addEventListener(MouseEvent.ROLL_OUT, tooltipDown);
 				// add to array and display list
 				industryWidgets.push(widget);
 				addChild(widget);
@@ -214,15 +211,8 @@
 		}
 		
 		public function tooltipUp(e:MouseEvent):void {
-			if (tooltip != null) {
-				removeChild(tooltip);
-			}
-			tooltip = new Tooltip(e.target);
+			var tooltip:Tooltip = new Tooltip(e.target);
 			addChild(tooltip);
-		}
-		
-		public function tooltipDown(e:MouseEvent):void {
-			tooltip.keepUp == false;
 		}
 		
 		public function renderZoom():void {
