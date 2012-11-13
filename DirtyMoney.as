@@ -92,11 +92,13 @@
 						break;						
 					}
 				}
+				// for some reason this can still happen twice. played it it a bit
+				// and couldn't figure out if it was the break statement not working
+				// right or the procedure being called a second time without my knowledge
 				if (found) {
 					clearIndustryWidgets();
 					// make the API request
 					candidateSearch(csvData[line][0]);
-					trace("searched");
 				} else {
 					// Display candidate name capitalized properly with regex
 					textName.text = e.target.text.replace(/\b[a-z]/g,
@@ -111,6 +113,7 @@
 			/*for each (var w:IndustryWidget in industryWidgets) {
 				w.parent.removeChild(industryWidgets.pop());
 			}*/
+			// this works fine in its place
 			if (industryWidgets.length > 0) {
 				for (var i:int = 0; i < industryWidgets.length; i++) {
 					industryWidgets[i].parent.removeChild(industryWidgets[i]);
