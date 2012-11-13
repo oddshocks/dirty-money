@@ -33,6 +33,8 @@
 		public var topContribution:Number;
 		public var zoomLevel:Number;
 		
+		public var tooltip:Tooltip;
+		
 		public function DirtyMoney() {
 			stop();
 			// Set up preloader
@@ -193,7 +195,7 @@
 							+ DRAG_BOUND_Y_MIN;
 				// set up tooltips
 				// did this here instead of in IndustryWidget for simplicity
-				//widget.addEventListener(MouseEvent.ROLL_OVER, tooltipUp);
+				widget.addEventListener(MouseEvent.ROLL_OVER, tooltipUp);
 				//widget.addEventListener(MouseEvent.ROLL_OUT, tooltipDown);
 				// add to array and display list
 				industryWidgets.push(widget);
@@ -212,14 +214,15 @@
 		}
 		
 		public function tooltipUp(e:MouseEvent):void {
-			//var tooltip:Tooltip = new Tooltip(e.target.percentPacs);
-			//tooltip.x = 200;
-			//tooltip.y = 200;
-			//addChild(tooltip);
+			if (tooltip != null) {
+				removeChild(tooltip);
+			}
+			tooltip = new Tooltip(e.target);
+			addChild(tooltip);
 		}
 		
 		public function tooltipDown(e:MouseEvent):void {
-			//pass
+			tooltip.keepUp == false;
 		}
 		
 		public function renderZoom():void {

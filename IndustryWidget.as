@@ -42,6 +42,8 @@
 			// fade in
 			if (alpha < 1) {
 				alpha += 0.03;
+			} else {
+				removeEventListener(Event.ENTER_FRAME, doFrame);
 			}
 		}
 		
