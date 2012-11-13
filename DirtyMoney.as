@@ -59,6 +59,7 @@
 				
 				// Set up searching
 				textInput.addEventListener(KeyboardEvent.KEY_UP, doSearchFieldChange);
+				textInput.addEventListener(MouseEvent.MOUSE_UP, clearSearchField);
 				
 				// Set up zooming
 				zoomLevel = sliderZoom.value;
@@ -69,29 +70,52 @@
 			}
 		}
 		
+		public function clearSearchField(e:MouseEvent):void {
+			textInput.text = "";
+		}
+		
 		public function changeZoom(e:Event):void {
 			zoomLevel = e.target.value;
 			renderZoom();
 		}
 		
 		public function doSearchFieldChange(e:KeyboardEvent):void {
-			clearIndustryWidgets();
 			if (textInput.text != "") {
-				for (var line:int = 0; line < csvData.length; line++) {
+				var line:int;
+				var found:Boolean = false;
+				for (line = 0; line < csvData.length; line++) {
 					// concatinate name, remove double quotes, and strip leading and trailing whitespace
 					candidateName = (csvData[line][2] + " "
 									 + csvData[line][1]).replace(/"/gi, "").replace(/^\s+|\s+$/g, "");
 					if (candidateName.toLowerCase() == e.target.text.toLowerCase()) {
-						// make the API request
-						candidateSearch(csvData[line][0]);
-						break;
-					} else {
-						// Display candidate name capitalized properly with regex
-						textName.text = e.target.text.replace(/\b[a-z]/g,
-															  function($0){return $0.toUpperCase();})
-							+ " not found.";
+						found = true;
+						break;						
 					}
 				}
+				if (found) {
+					clearIndustryWidgets();
+					// make the API request
+					candidateSearch(csvData[line][0]);
+					trace("searched");
+				} else {
+					// Display candidate name capitalized properly with regex
+					textName.text = e.target.text.replace(/\b[a-z]/g,
+														  function($0){return $0.toUpperCase();})
+						+ " not found.";
+				}
+			}
+		}
+		
+		public function clearIndustryWidgets():void {
+			// wonder why this doesn't work?
+			/*for each (var w:IndustryWidget in industryWidgets) {
+				w.parent.removeChild(industryWidgets.pop());
+			}*/
+			if (industryWidgets.length > 0) {
+				for (var i:int = 0; i < industryWidgets.length; i++) {
+					industryWidgets[i].parent.removeChild(industryWidgets[i]);
+				}
+				industryWidgets = [];
 			}
 		}
 		
@@ -200,12 +224,6 @@
 			for each (var w:IndustryWidget in industryWidgets) {
 				w.scaleX = (w.total / topContribution) * (zoomLevel / 100);
 				w.scaleY = (w.total / topContribution) * (zoomLevel / 100);
-			}
-		}
-		
-		public function clearIndustryWidgets():void {
-			for each (var w:IndustryWidget in industryWidgets) {
-				w.parent.removeChild(industryWidgets.pop());
 			}
 		}
 	}
