@@ -13,9 +13,9 @@
 			= "http://www.opensecrets.org/api/?method=candIndustry&cid=";
 		public const DATE:Date = new Date();
 		public const DRAG_BOUND_X_MIN = 50;
-		public const DRAG_BOUND_X_MAX = 750;
+		public const DRAG_BOUND_X_MAX = 800;
 		public const DRAG_BOUND_Y_MIN = 300;
-		public const DRAG_BOUND_Y_MAX = 450;
+		public const DRAG_BOUND_Y_MAX = 500;
 		
 		public var csvRequest:URLRequest;
 		public var csvLoader:URLLoader;
