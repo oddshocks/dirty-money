@@ -24,17 +24,23 @@
 		}
 		
 		public function doFrame(e:Event):void {
-			x = parent.mouseX;
-			y = parent.mouseY - 100;
-			if (currentFrame == 24 && stayAlive) {
-				stop();
-				textTotal.text = "$" + linkedWidget.total;
-				textPacs.text = linkedWidget.percentPacs + "%";
-			} else if (currentFrame == 24 && !stayAlive) {
-				play();
-			} else if (currentFrame == 48) {
-				removeEventListener(Event.ENTER_FRAME, doFrame);
-				visible = false; // janky, but whatever. it has to happen
+			try {
+				x = parent.mouseX;
+				y = parent.mouseY - 100;
+				if (currentFrame == 24 && stayAlive) {
+					stop();
+					textTotal.text = "$" + linkedWidget.total;
+					textPacs.text = linkedWidget.percentPacs + "%";
+				} else if (currentFrame == 24 && !stayAlive) {
+					play();
+				} else if (currentFrame == 48) {
+					removeEventListener(Event.ENTER_FRAME, doFrame);
+					visible = false; // janky, but whatever. it has to happen
+				}
+			}
+			catch (TypeError) {
+				// repress TypeError message, since I spend at least 3-4 hours trying
+				// to get rid of it and it's just not gonna happen right now
 			}
 		}
 		
