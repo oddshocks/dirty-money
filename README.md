@@ -4,6 +4,11 @@ dirty-money
 Flash-powered visualization of industry contributions
 to members of the US Congress. Created for RIT course 4002-331.
 
+License
+-------
+
+All source is released under the AGPLv3+. See ``LICENSE`` file.
+
 Design
 ------
 
